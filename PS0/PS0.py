@@ -12,7 +12,11 @@ from text import Text
 # This function should return the number of bit errors in the two
 # lists.
 def count_bit_errors(list1, list2):
-    return None
+    count = 0
+    for index in range(len(list1)):
+        if list1[index] != list2[index]:
+            count += 1
+    return count
 
 parser = argparse.ArgumentParser()
 parser.add_argument("type", choices=["sound", "image", "text"])
