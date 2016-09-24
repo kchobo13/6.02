@@ -20,8 +20,24 @@ class LZWEncoder(SourceEncoder):
         self.dictionary = {chr(k) : k for k in range(256)}
 
     def encode(self, message):
-        # TODO: Your code here.  See the pset write-up for a description.
-        return None
+        string = message.pop(0)
+        code = []
+        bitstring = BitString()
+        while message:
+            symbol = message.pop(0)
+            if (string + symbol) in self.dictionary.keys():
+                string = string + symbol
+            else:
+                code.append(self.dictionary[string])
+                if len(self.dictionary) >= 2**16:
+                    self.initialize_dict()
+                self.dictionary[string+symbol] = len(self.dictionary)
+                string = symbol
+            if len(message) == 0:
+                code.append(self.dictionary[string])
+
+        bitstring.pack_numbers(code, 16)
+        return bitstring
 
 class LZWDecoder(SourceDecoder):
 
@@ -36,8 +52,26 @@ class LZWDecoder(SourceDecoder):
         self.dictionary = {k : chr(k) for k in range(256)}
 
     def decode(self, bits):
-        # TODO: Your code here.  See the pset write-up for a description.
-        return None
+        numbers = bits.unpack_all_numbers(16)
+
+        code = numbers.pop(0)
+        string = self.dictionary[code]
+        output = string
+
+        while numbers:
+            code = numbers.pop(0)
+
+            if code not in self.dictionary.keys():
+                entry = string + string[0]
+            else:
+                entry = self.dictionary[code]
+            output += entry
+            if len(self.dictionary) >= 2 ** 16:
+                self.initialize_dict()
+            self.dictionary[len(self.dictionary)] = string + entry[0]
+            string = entry
+
+        return output
 
 if __name__ == "__main__":
 
