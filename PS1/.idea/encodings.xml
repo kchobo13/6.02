@@ -5,5 +5,6 @@
     <file url="file://$PROJECT_DIR$/lzw_tests/test-1-encoded" charset="ISO-8859-1" />
     <file url="file://$PROJECT_DIR$/lzw_tests/test-1-unencoded" charset="ISO-8859-1" />
     <file url="file://$PROJECT_DIR$/lzw_tests/test-1-unencoded.encoded" charset="ISO-8859-1" />
+    <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>
