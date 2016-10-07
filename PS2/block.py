@@ -14,12 +14,12 @@ class BlockEncoder(ChannelEncoder):
     '''
     Here, you should implement the linear encoder.  This requires
     the following steps:
-    
+
     1. Calculate the G matrix
     2. Break the message into k-length blocks
     3. Use G to determine the codewords for each block
     4. Concatenate the codewords into a single array and return it
-    
+
     The input, bits, will be a numpy array of integers (each integer
     is 0 or 1).
     '''
@@ -57,7 +57,7 @@ class SyndromeDecoder(ChannelDecoder):
     4. For each codeword, calculate the error bits
     5. If the error bits are nonzero, use the syndrome table to correct the error.
     6. Return the corrected bitstring
-    
+
     Please set up the syndrome table before you perform the decoding
     (feel free to set up a different function to do this).  This will
     result in a more organized design, and also a more efficient
@@ -65,5 +65,33 @@ class SyndromeDecoder(ChannelDecoder):
     syndrome table for each codeword).
     '''
     def decode(self, A, bits):
-        # TODO: Your code here
-        return None
+        #Calculate the H matrix
+        k = len(A.T)
+        identity = numpy.identity(k, int)
+        H = numpy.concatenate((A.T, identity), axis=1)
+
+
+
+        #Break the message into n-length blocks
+        decoded = []
+        bits_array = bits.reshape((int(len(bits)/len(H.T)),len(H.T)))
+
+        for array in bits_array:
+            r = ''
+            for i in array:
+                r += str(i)
+
+            e = numpy.mod(H.dot(array.T),2)
+            index = 0
+            for i in range(len(A)):
+                if (A[i] == e).all():
+                    index = i
+            e_i = ''
+            for i in identity[index]:
+                e_i += str(i)
+            print(e_i)
+            c = numpy.mod(int(r) + int(e_i), 2)
+            c = list(c)
+            decoded += c
+
+        return decoded
