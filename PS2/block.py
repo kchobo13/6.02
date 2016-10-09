@@ -69,29 +69,29 @@ class SyndromeDecoder(ChannelDecoder):
         k = len(A.T)
         identity = numpy.identity(k, int)
         H = numpy.concatenate((A.T, identity), axis=1)
+        syndrome_iden = numpy.identity(len(H.T), int)
 
-
+        #syndrome table
+        table = {}
+        for i in range(len(syndrome_iden)):
+            s = numpy.mod(H.dot(syndrome_iden[i].T),2)
+            string = ''
+            for j in s:
+                string = string + str(j)
+            table[string] = syndrome_iden[i]
 
         #Break the message into n-length blocks
         decoded = []
         bits_array = bits.reshape((int(len(bits)/len(H.T)),len(H.T)))
 
-        for array in bits_array:
-            r = ''
-            for i in array:
-                r += str(i)
+        for code in bits_array:
+            s = numpy.mod(H.dot(code.T),2)
+            if 1 in s:
+                string = ''
+                for j in s:
+                    string = string + str(j)
 
-            e = numpy.mod(H.dot(array.T),2)
-            index = 0
-            for i in range(len(A)):
-                if (A[i] == e).all():
-                    index = i
-            e_i = ''
-            for i in identity[index]:
-                e_i += str(i)
-            print(e_i)
-            c = numpy.mod(int(r) + int(e_i), 2)
-            c = list(c)
-            decoded += c
-
-        return decoded
+                error = table[string]
+                code = numpy.mod(code+error,2)
+            decoded = numpy.concatenate((decoded, code[:k+1]))
+        return decoded.astype(int)

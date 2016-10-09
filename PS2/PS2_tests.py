@@ -53,22 +53,22 @@ def test_encode():
 
 def test_decode(errors=False):
 
-    # Example 1 from page 67
+    # # # Example 1 from page 67
     message_bits = numpy.asarray([int(i) for i in "011011111010000001100101101111100000"])
-    A = numpy.array([[1, 0, 1, 0, 0], [1, 0, 0, 1, 0], [1, 0, 0, 0, 1], [0, 1, 1, 0, 0], [0, 1, 0, 1, 0], [0, 1, 0, 0, 1]])
-    encoded_bits = numpy.asarray([int(i) for i in "011011000001110101110100000101001100101100011011110101010000010100"])
-
-    # Insert random errors
-    if errors:
-        (k, m) = A.shape
-        encoded_bits = insert_errors(encoded_bits, k + m, 1)
-
+    # A = numpy.array([[1, 0, 1, 0, 0], [1, 0, 0, 1, 0], [1, 0, 0, 0, 1], [0, 1, 1, 0, 0], [0, 1, 0, 1, 0], [0, 1, 0, 0, 1]])
+    # encoded_bits = numpy.asarray([int(i) for i in "011011000001110101110100000101001100101100011011110101010000010100"])
+    #
+    # # Insert random errors
+    # if errors:
+    #     (k, m) = A.shape
+    #     encoded_bits = insert_errors(encoded_bits, k + m, 1)
+    #
     decoder = block.SyndromeDecoder()
-    x = decoder.decode(A, encoded_bits)
-
-    if not numpy.array_equal(x, message_bits):
-        print("Decode incorrect\nA:\n", A, "\nEncoded bits:\n", encoded_bits, "\nYour decoding:\n", x, "\nCorrect decoding:\n", message_bits)
-        return False
+    # x = decoder.decode(A, encoded_bits)
+    #
+    # if not numpy.array_equal(x, message_bits):
+    #     print("Decode incorrect\nA:\n", A, "\nEncoded bits:\n", encoded_bits, "\nYour decoding:\n", x, "\nCorrect decoding:\n", message_bits)
+    #     return False
 
     # Example 2 from page 67
     A = numpy.array([[1, 1, 0], [1, 0, 1], [0, 1, 1], [1, 1, 1]])
